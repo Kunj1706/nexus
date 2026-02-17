@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS – College Event App</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── TOAST CONTAINER ── -->
+<div id="toast"></div>
+
+
+<!-- ════════════════════════════════════════
+     SCREEN: AUTH
+════════════════════════════════════════ -->
+<div class="screen active" id="screen-auth"
+     style="align-items:center;justify-content:center;min-height:100vh;
+            background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.2) 0%,transparent 60%)">
+
+  <div style="width:100%;max-width:440px;padding:24px">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:28px">
+           <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.12em;
+                  background:linear-gradient(135deg,var(--accent),var(--accent2));
+                  background-clip:text;
+                  -webkit-background-clip:text;-webkit-text-fill-color:transparent">NEXUS</div>
+      <div style="color:var(--text2);font-size:.85rem">College Event Management Platform</div>
+    </div>
+
+    <!-- Auth Card -->
+    <div class="modal" style="position:static;max-height:none;animation:none">
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:4px;margin-bottom:22px">
+        <button class="btn btn-sm" id="auth-tab-login"    onclick="authTab('login')"
+                style="flex:1;justify-content:center;background:var(--accent);color:#fff">Login</button>
+        <button class="btn btn-sm btn-ghost" id="auth-tab-register" onclick="authTab('register')"
+                style="flex:1;justify-content:center">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="auth-login">
+        <div class="form-group">
+          <label class="form-label">College ID / Email / Mobile</label>
+          <input class="form-input" id="login-id" type="text" placeholder="Enter your ID, email or mobile">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="login-pass" type="password" placeholder="Enter your password">
+          <div class="form-error" id="login-err" style="display:none"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <label style="display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text2);cursor:pointer">
+            <input type="checkbox" style="accent-color:var(--accent)"> Remember me
+          </label>
+          <a style="font-size:.8rem;color:var(--accent);cursor:pointer" onclick="showForgotPass()">Forgot password?</a>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="doLogin()">Login to NEXUS →</button>
+        <div class="divider">or</div>
+        <button class="btn btn-ghost btn-full" onclick="demoLogin()"  style="margin-bottom:8px">🧑‍🎓 Try Demo Student Account</button>
+        <button class="btn btn-ghost btn-full" onclick="demoAdmin()">🛡️ Try Demo Admin Account</button>
+      </div>
+
+      <!-- Register Form -->
+      <div id="auth-register" style="display:none">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="reg-fname" type="text" placeholder="First name"></div>
+          <div class="form-group"><label class="form-label">Last Name</label> <input class="form-input" id="reg-lname" type="text" placeholder="Last name"></div>
+        </div>
+        <div class="form-group"><label class="form-label">College ID</label><input class="form-input" id="reg-cid" type="text" placeholder="e.g. CSE-2024-0101"></div>
+        <div class="form-group"><label class="form-label">Mobile Number</label><input class="form-input" id="reg-mobile" type="tel" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" id="reg-email" type="email" placeholder="you@college.edu"></div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select class="form-input" id="reg-dept">
+            <option value="">Select Department</option>
+            <option>Computer Science</option>
+            <option>Electronics</option>
+            <option>Mechanical</option>
+            <option>Civil</option>
+            <option>Business Administration</option>
+            <option>Arts &amp; Design</option>
+            <option>Science</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Year</label>
+            <select class="form-input" id="reg-year">
+              <option value="">Year</option>
+              <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="reg-pass" type="password" placeholder="Min 6 chars"></div>
+        </div>
+        <div class="form-error" id="reg-err" style="display:none"></div>
+        <button class="btn btn-primary btn-full btn-lg" style="margin-top:8px" onclick="doRegister()">Create Free Account →</button>
+      </div>
+
+    </div><!-- /Auth Card -->
+  </div>
+</div><!-- /screen-auth -->
+
+
+<!-- ════════════════════════════════════════
+     SCREEN: MAIN APP
+════════════════════════════════════════ -->
+<div class="screen" id="screen-app">
+
+  <!-- ── TOP NAV ── -->
+  <nav id="main-nav">
+    <div class="nav-logo" onclick="showPage('home')">NEXUS</div>
+
+    <div class="nav-links-row">
+      <button class="nav-link active" id="nl-home"          onclick="showPage('home')">🏠 Home</button>
+      <button class="nav-link"        id="nl-events"        onclick="showPage('events')">🎪 Events</button>
+      <button class="nav-link"        id="nl-tickets"       onclick="showPage('tickets')">🎫 Tickets</button>
+      <button class="nav-link"        id="nl-dashboard"     onclick="showPage('dashboard')">👤 Dashboard</button>
+      <button class="nav-link"        id="nl-admin admin-nav-btn" onclick="showPage('admin')">🛡️ Admin</button>
+    </div>
+
+    <div class="nav-right">
+      <div class="notif-btn" onclick="showPage('notifications')">🔔
+        <div class="notif-dot" id="notif-dot"></div>
+      </div>
+      <div class="avatar-btn" id="nav-avatar" onclick="showPage('dashboard')">👦</div>
+      <button class="btn btn-outline btn-sm" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ── PAGE CONTAINER ── -->
+  <div id="page-container" style="flex:1">
+
+    <!-- ══ HOME PAGE ══ -->
+    <div id="page-home" class="fade-in">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-badge">Live Platform · 2025</div>
+        <h1>
+          <span style="display:block">COLLEGE EVENTS</span>
+          <span class="grad-text" style="display:block">REIMAGINED</span>
+        </h1>
+        <p class="hero-sub">Discover, register, and experience every event at your college — from fests to workshops, seminars to sports. All in one place.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" onclick="showPage('events')">🎯 Explore Events</button>
+          <button class="btn btn-ghost btn-lg"   onclick="showPage('tickets')">🎫 View Passes</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-box"><div class="stat-num" id="hs-events">—</div><div class="stat-lbl">Events</div></div>
+          <div class="stat-box"><div class="stat-num" id="hs-students">—</div><div class="stat-lbl">Students</div></div>
+          <div class="stat-box"><div class="stat-num" id="hs-tickets">—</div><div class="stat-lbl">Tickets Sold</div></div>
+          <div class="stat-box"><div class="stat-num">8</div><div class="stat-lbl">Categories</div></div>
+        </div>
+      </div>
+
+      <!-- Countdown -->
+      <div class="countdown-section">
+        <div style="position:relative;z-index:1">
+          <div class="sec-label" style="text-align:center">Next Big Event</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,3vw,2rem);color:#a78bfa;letter-spacing:.12em;margin-bottom:6px">UTKARSH ANNUAL FEST 2025</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:.04em;margin-bottom:28px;line-height:1">STARTS IN</div>
+          <div class="cd-grid">
+            <div class="cd-block"><div class="cd-num" id="cd-d">47</div><div class="cd-lbl">Days</div></div>
+            <div class="cd-block"><div class="cd-num" id="cd-h">12</div><div class="cd-lbl">Hours</div></div>
+            <div class="cd-block"><div class="cd-num" id="cd-m">34</div><div class="cd-lbl">Mins</div></div>
+            <div class="cd-block"><div class="cd-num" id="cd-s">09</div><div class="cd-lbl">Secs</div></div>
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="openBooking('utkarsh-fest')">🎟️ Book All-Access Pass</button>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="section">
+        <div class="container reveal">
+          <div class="sec-label">Browse By</div>
+          <div class="sec-title">EVENT CATEGORIES</div>
+          <div class="cat-grid" id="home-cat-grid"></div>
+        </div>
+      </div>
+
+      <!-- Featured Events -->
+      <div class="section bg2">
+        <div class="container reveal">
+          <div class="sec-header-row">
+            <div><div class="sec-label">Featured</div><div class="sec-title">UPCOMING EVENTS</div></div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('events')">View All →</button>
+          </div>
+          <div class="events-grid" id="home-events-grid"></div>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="section">
+        <div class="container reveal">
+          <div class="sec-header-row">
+            <div><div class="sec-label">Top Participants</div><div class="sec-title">LEADERBOARD</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px">
+            <div class="dash-card">
+              <div class="dc-title">🏆 Most Active Students</div>
+              <div id="leaderboard-list"></div>
+            </div>
+            <div class="dash-card">
+              <div class="dc-title">🔥 Popular Events</div>
+              <div class="bar-list" id="popular-events-bars"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">NEXUS</div>
+            <div class="footer-desc">The complete college event management platform. Discover, register, and celebrate every campus moment.</div>
+            <div class="social-row" style="margin-top:16px">
+              <a class="soc-btn">𝕏</a>
+              <a class="soc-btn">in</a>
+              <a class="soc-btn">📸</a>
+              <a class="soc-btn">▶</a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <ul>
+              <li><a onclick="showPage('events')">Events</a></li>
+              <li><a onclick="showPage('tickets')">Tickets</a></li>
+              <li><a onclick="showPage('dashboard')">Dashboard</a></li>
+              <li><a onclick="showPage('admin')">Admin</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Features</h4>
+            <ul>
+              <li><a>QR Passes</a></li>
+              <li><a>AI Recommend</a></li>
+              <li><a>Certificates</a></li>
+              <li><a onclick="showPage('notifications')">Notifications</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+              <li><a onclick="toast('Help Center coming soon!','info')">Help Center</a></li>
+              <li><a onclick="toast('FAQ coming soon!','info')">FAQ</a></li>
+              <li><a onclick="openFeedback()">Feedback</a></li>
+              <li><a onclick="toast('Privacy Policy','info')">Privacy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 NEXUS · All rights reserved</span>
+          <span>Made with ❤️ for Students</span>
+        </div>
+      </footer>
+
+    </div><!-- /page-home -->
+
+
+    <!-- ══ EVENTS PAGE ══ -->
+    <div id="page-events" style="display:none" class="fade-in">
+      <div class="section">
+        <div class="container">
+          <div class="sec-label">Discover</div>
+          <div class="sec-title">ALL EVENTS</div>
+
+          <div class="search-wrap">
+            <span style="padding:0 0 0 10px;color:var(--text2)">🔍</span>
+            <input class="search-input" id="event-search" type="text"
+                   placeholder="Search events, fests, workshops..." oninput="filterEvents()">
+            <select class="form-input" id="event-cat-filter" onchange="filterEvents()"
+                    style="width:160px;padding:6px 10px;border:none;background:var(--surface2)">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+
+          <div class="filter-row" id="events-filter-tabs">
+            <button class="filter-btn active"  onclick="setEventFilter(this,'all')">All</button>
+            <button class="filter-btn"         onclick="setEventFilter(this,'upcoming')">Upcoming</button>
+            <button class="filter-btn"         onclick="setEventFilter(this,'live')">🔴 Live Now</button>
+            <button class="filter-btn"         onclick="setEventFilter(this,'free')">Free Entry</button>
+            <button class="filter-btn"         onclick="setEventFilter(this,'completed')">Past Events</button>
+          </div>
+
+          <div class="events-grid" id="all-events-grid"></div>
+        </div>
+      </div>
+    </div><!-- /page-events -->
+
+
+    <!-- ══ TICKETS PAGE ══ -->
+    <div id="page-tickets" style="display:none" class="fade-in">
+      <div class="section">
+        <div class="container">
+          <div class="sec-label">Passes &amp; Pricing</div>
+          <div class="sec-title">CHOOSE YOUR PASS</div>
+          <div class="sec-sub">Flexible ticket options. Digital QR passes generated instantly.</div>
+          <div class="tickets-row" id="tickets-grid"></div>
+        </div>
+      </div>
+    </div><!-- /page-tickets -->
+
+
+    <!-- ══ DASHBOARD PAGE ══ -->
+    <div id="page-dashboard" style="display:none" class="fade-in">
+      <div class="section">
+        <div class="container">
+          <div class="dash-layout">
+
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+              <div class="profile-av" id="dash-av">👦</div>
+              <div class="profile-name" id="dash-name">Student</div>
+              <div class="profile-id"   id="dash-id">ID: —</div>
+              <div class="profile-badges" id="dash-badges"></div>
+              <div class="profile-stats-row">
+                <div><div class="ps-num" id="dash-events-count">0</div><div class="ps-lbl">Events</div></div>
+                <div><div class="ps-num" id="dash-certs-count">0</div><div class="ps-lbl">Certs</div></div>
+                <div><div class="ps-num" id="dash-spend">₹0</div><div class="ps-lbl">Spent</div></div>
+              </div>
+              <div class="sidebar-menu">
+                <button class="s-menu-item active" onclick="dashTab('my-tickets')">🎫 My Tickets</button>
+                <button class="s-menu-item" onclick="dashTab('achievements')">🏆 Achievements</button>
+                <button class="s-menu-item" onclick="dashTab('certificates')">📜 Certificates</button>
+                <button class="s-menu-item" onclick="dashTab('edit-profile')">✏️ Edit Profile</button>
+                <button class="s-menu-item" onclick="dashTab('payment-history')">💰 Payment History</button>
+              </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="dash-content" id="dash-content-area"></div>
+
+          </div>
+        </div>
+      </div>
+    </div><!-- /page-dashboard -->
+
+
+    <!-- ══ ADMIN PAGE ══ -->
+    <div id="page-admin" style="display:none" class="fade-in">
+      <div class="admin-grid">
+
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);margin-bottom:20px;padding:0 8px">ADMIN PANEL</div>
+          <button class="admin-menu-item active" onclick="adminTab(this,'overview')">📊 Dashboard</button>
+          <button class="admin-menu-item" onclick="adminTab(this,'manage-events')">📝 Manage Events</button>
+          <button class="admin-menu-item" onclick="adminTab(this,'students')">👥 Students</button>
+          <button class="admin-menu-item" onclick="adminTab(this,'scan')">📷 QR Scanner</button>
+          <button class="admin-menu-item" onclick="adminTab(this,'announcements')">📢 Announcements</button>
+          <button class="admin-menu-item" onclick="adminTab(this,'revenue')">💰 Revenue</button>
+        </div>
+
+        <!-- Main -->
+        <div class="admin-main" id="admin-content"></div>
+
+      </div>
+    </div><!-- /page-admin -->
+
+
+    <!-- ══ NOTIFICATIONS PAGE ══ -->
+    <div id="page-notifications" style="display:none" class="fade-in">
+      <div class="section">
+        <div class="container" style="max-width:600px">
+          <div class="sec-header-row" style="margin-bottom:24px">
+            <div><div class="sec-label">Updates</div><div class="sec-title">NOTIFICATIONS</div></div>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all read</button>
+          </div>
+          <div class="notif-panel" id="notif-list"></div>
+        </div>
+      </div>
+    </div><!-- /page-notifications -->
+
+
+    <!-- ══ EVENT DETAIL PAGE ══ -->
+    <div id="page-event-detail" style="display:none" class="fade-in">
+      <div style="max-width:100%">
+        <div class="event-detail-header" id="edh-thumb">🎵</div>
+        <div class="event-detail-body"   id="edh-body"></div>
+      </div>
+    </div><!-- /page-event-detail -->
+
+  </div><!-- /page-container -->
+
+
+  <!-- ── BOTTOM NAV (mobile) ── -->
+  <div id="bottom-nav">
+    <button class="bnav-item active" onclick="showPage('home')"><span class="bnav-icon">🏠</span>Home</button>
+    <button class="bnav-item" onclick="showPage('events')"><span class="bnav-icon">🎪</span>Events</button>
+    <button class="bnav-item" onclick="showPage('tickets')"><span class="bnav-icon">🎫</span>Tickets</button>
+    <button class="bnav-item" onclick="showPage('dashboard')"><span class="bnav-icon">👤</span>Profile</button>
+    <button class="bnav-item" onclick="showPage('notifications')"><span class="bnav-icon">🔔</span>Alerts</button>
+  </div>
+
+</div><!-- /screen-app -->
+
+
+<!-- ════════════════════════════════════════
+     MODALS
+════════════════════════════════════════ -->
+
+<!-- Booking Modal -->
+<div class="overlay" id="booking-overlay">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal('booking-overlay')">✕</button>
+    <div id="booking-modal-content"></div>
+  </div>
+</div>
+
+<!-- QR Modal -->
+<div class="overlay" id="qr-overlay">
+  <div class="modal" style="text-align:center">
+    <button class="modal-x" onclick="closeModal('qr-overlay')">✕</button>
+    <div id="qr-modal-content"></div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="overlay" id="feedback-overlay">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal('feedback-overlay')">✕</button>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;margin-bottom:18px">SEND FEEDBACK</h3>
+    <div class="form-group">
+      <label class="form-label">Subject</label>
+      <input class="form-input" id="fb-subject" type="text" placeholder="What's on your mind?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-input" id="fb-message" rows="4" placeholder="Share your thoughts..." style="resize:none"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Rating</label>
+      <div style="display:flex;gap:8px;margin-top:4px" id="fb-stars">
+        <span style="font-size:1.6rem;cursor:pointer" onclick="setRating(1)">⭐</span>
+        <span style="font-size:1.6rem;cursor:pointer" onclick="setRating(2)">⭐</span>
+        <span style="font-size:1.6rem;cursor:pointer" onclick="setRating(3)">⭐</span>
+        <span style="font-size:1.6rem;cursor:pointer" onclick="setRating(4)">⭐</span>
+        <span style="font-size:1.6rem;cursor:pointer" onclick="setRating(5)">⭐</span>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="submitFeedback()">Submit Feedback ✓</button>
+  </div>
+</div>
+
+<!-- Create / Edit Event Modal (Admin) -->
+<div class="overlay" id="create-event-overlay">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-x" onclick="closeModal('create-event-overlay')">✕</button>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;margin-bottom:20px">CREATE NEW EVENT</h3>
+    <div class="form-group"><label class="form-label">Event Name</label><input class="form-input" id="ce-name" type="text" placeholder="Enter event name"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-input" id="ce-cat">
+          <option>Cultural</option><option>Technical</option><option>Sports</option>
+          <option>Workshop</option><option>Seminar</option><option>Fresher Party</option><option>Fest</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-input" id="ce-status">
+          <option value="upcoming">Upcoming</option>
+          <option value="live">Live</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="ce-date" type="date"></div>
+      <div class="form-group"><label class="form-label">Time</label><input class="form-input" id="ce-time" type="time"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Venue</label><input class="form-input" id="ce-venue" type="text" placeholder="e.g. Main Auditorium, Block A"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Price (₹, 0 = Free)</label><input class="form-input" id="ce-price" type="number" value="0" min="0"></div>
+      <div class="form-group"><label class="form-label">Total Seats</label><input class="form-input" id="ce-seats" type="number" value="100" min="1"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ce-desc" rows="3" placeholder="Event description..." style="resize:none"></textarea></div>
+    <div class="form-group"><label class="form-label">Organizer</label><input class="form-input" id="ce-org" type="text" placeholder="Department / Club name"></div>
+    <button class="btn btn-primary btn-full btn-lg" style="margin-top:6px" onclick="createEvent()">Create Event →</button>
+  </div>
+</div>
+
+<!-- Announcement Modal -->
+<div class="overlay" id="ann-overlay">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal('ann-overlay')">✕</button>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.06em;margin-bottom:18px">📢 SEND ANNOUNCEMENT</h3>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ann-title" type="text" placeholder="Announcement title"></div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="ann-msg" rows="4" placeholder="Write your message..." style="resize:none"></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select class="form-input" id="ann-type">
+        <option value="info">ℹ️ Info</option>
+        <option value="success">✅ Success</option>
+        <option value="warning">⚠️ Warning</option>
+        <option value="event">🎪 Event Update</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="sendAnnouncement()">Send to All Students →</button>
+  </div>
+</div>
+
+
+<!-- ── JavaScript ── -->
+<script src="app.js"></script>
+</body>
+</html>
