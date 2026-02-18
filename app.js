@@ -430,7 +430,7 @@ function openBooking(eventId) {
 // ════════════════════════════════════════
 // RAZORPAY
 // ════════════════════════════════════════
-const RAZORPAY_KEY_ID = 'rzp_test_XXXXXXXXXXXXXXXX'; // 🔴 Replace with your key
+const RAZORPAY_KEY_ID = 'rzp_test_SHUrifAT4lj1ob'; // 🔴 Replace with your key
 
 function confirmBooking(eventId) {
   const e=cachedEvents.find(ev=>ev.id===eventId);
@@ -793,3 +793,4 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // ════════════════════════════════════════
 seedFirestoreIfEmpty();
 populateCatFilter();
+
